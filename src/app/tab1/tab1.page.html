@@ -1,17 +1,60 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="scheule-page-header">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2"></ion-col>
+        <ion-col size="8" class="ion-text-center"><ion-title>Vytilla Station Departures</ion-title></ion-col>
+        <ion-col size="2">{{ today | date: 'shortTime' }}</ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="trainview-content">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">{{station_name}} Station Departures</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  @let date_placeholder = (today | date: 'fullDate');
+  <ion-grid class="schedules">
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-center sub-header">
+        Going towards Aluva
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-center">Arrival Time</ion-col>
+    </ion-row>
+    @for (inbound_trip of inbound_trips; track inbound_trip.trip_id) {
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-center">
+        {{date_placeholder +' '+inbound_trip.arrival_time | date: 'shortTime'}}
+      </ion-col>
+    </ion-row>
+    }
+  </ion-grid>
+  <ion-grid class="schedules">
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-center sub-header">
+        Going towards Tripunithura
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-center">Arrival Time</ion-col>
+    </ion-row>
+    @for (outbound_trip of outbound_trips; track outbound_trip.trip_id) {
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-center">
+        {{date_placeholder +' '+outbound_trip.arrival_time | date: 'shortTime'}}
+      </ion-col>
+    </ion-row>
+    }
+  </ion-grid>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" (click)="logUserOut()">Log out</ion-button>
+  </ion-toolbar>
+</ion-footer>

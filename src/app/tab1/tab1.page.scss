@@ -1,0 +1,17 @@
+ion-header ion-toolbar:first-of-type {
+  --background: #0000CC;
+  --color: var(--ion-color-primary-contrast);
+}
+ion-content::part(background) {
+  background: var(--ion-color-success-contrast);
+}
+ion-content::part(scroll) {
+  color: var(--ion-color-primary-contrast);
+}
+.schedules ion-col {
+  border: 1px solid #ccc;
+}
+.sub-header {
+  font-size: 1.2em;
+  background: #000066;
+}
