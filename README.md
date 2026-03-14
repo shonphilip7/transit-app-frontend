@@ -5,7 +5,7 @@ A starter ionic-angular app to show arrival times for a station and the route th
 3. Follow the steps in the repo <a href="https://github.com/shonphilip7/transit-app-api">transit-app-api</a> to run the API container.
 4. Follow the steps in the <a href="https://github.com/shonphilip7/sample-transit-map">custom tiles repo</a> to generate the map
 ## Steps to run the app locally
-1. Once the API container is up and running, git clone https://github.com/shonphilip7/transit-app-frontend
+1. Once the API containers in the pre-requisite are up and running, git clone https://github.com/shonphilip7/transit-app-frontend
 2. cd transit-app-frontend
 3. docker build -t sample-ionic-transit-app .
 4. docker run -p 8100:80 sample-ionic-transit-app
