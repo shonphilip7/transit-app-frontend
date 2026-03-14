@@ -10,5 +10,5 @@ A starter ionic-angular app to show arrival times for a station and the route th
 3. docker build -t sample-ionic-transit-app .
 4. docker run -p 8100:80 sample-ionic-transit-app
 <p>
-  Once the frontend container is running, browse to http://localhost:8100/ to get to the login page. Create an account by clicking on the Register button and then login with the credentials. The app uses the default tabs template where tab 1 shows the arrivak times for Vytilla station and tab 2 shows route map.   
+  Once the frontend container is running, browse to http://localhost:8100/ to get to the login page. Create an account by clicking on the Register button and then login with the credentials. The app uses the default tabs template where tab 1 shows the arrival times for Vytilla station and tab 2 shows route map.   
 </p> 
