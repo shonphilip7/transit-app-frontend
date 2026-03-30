@@ -3,56 +3,65 @@
     <ion-grid>
       <ion-row>
         <ion-col size="2"></ion-col>
-        <ion-col size="8" class="ion-text-center"><ion-title>Vytilla Station Departures</ion-title></ion-col>
+        <ion-col size="8" class="ion-text-center"><ion-title>{{station_name}} Station Departures</ion-title></ion-col>
         <ion-col size="2">{{ today | date: 'shortTime' }}</ion-col>
       </ion-row>
     </ion-grid>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true" class="trainview-content">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">{{station_name}} Station Departures</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <form *ngIf="showForm" [formGroup]="trainViewForm" (ngSubmit)="submitForm()">
+    <ion-list>
+      <ion-item>
+        <ion-select formControlName="selectedRoute" label="Select Route" placeholder="Select">
+        <ion-select-option 
+          *ngFor="let item of route_items" 
+          [value]="item.route_id"> <!-- Bind the value to a unique ID -->
+          {{ item.route_long_name }} <!-- Display the name to the user -->
+        </ion-select-option>
+        </ion-select>
+      </ion-item>
+       <!-- Error message display -->
+      <ion-item *ngIf="hasError('selectedRoute', 'required')">
+        <ion-label color="danger">Please select an option.</ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button expand="block" type="submit" class="ion-margin-top">
+      Submit Action
+    </ion-button>
+  </form>
   @let date_placeholder = (today | date: 'fullDate');
-  <ion-grid class="schedules">
-    <ion-row class="ion-align-items-center">
-      <ion-col class="ion-text-center sub-header">
-        Going towards Aluva
+  <ion-grid class="schedules" *ngIf="!showForm">
+    <ion-row>
+      <ion-col size-sm="12" size-md="6">
+        <div class="ion-text-center sub-header ion-padding">Going towards Aluva</div>
+        <ion-row class="ion-align-items-center">
+          <ion-col class="ion-text-center" style="font-weight: bold;">Arrival Time</ion-col>
+        </ion-row>
+        @for (inbound_trip of inbound_trips; track inbound_trip.trip_id) {
+          <ion-row class="ion-align-items-center">
+            <ion-col class="ion-text-center">
+              {{date_placeholder +' '+inbound_trip.arrival_time | date: 'shortTime'}}
+            </ion-col>
+          </ion-row>
+        }
+      </ion-col>
+      <ion-col size-sm="12" size-md="6">
+        <div class="ion-text-center sub-header ion-padding">Going towards Tripunithura</div>
+        <ion-row class="ion-align-items-center">
+          <ion-col class="ion-text-center" style="font-weight: bold;">Arrival Time</ion-col>
+        </ion-row>
+        @for (outbound_trip of outbound_trips; track outbound_trip.trip_id) {
+          <ion-row class="ion-align-items-center">
+            <ion-col class="ion-text-center">
+              {{date_placeholder +' '+outbound_trip.arrival_time | date: 'shortTime'}}
+            </ion-col>
+          </ion-row>
+        }
       </ion-col>
     </ion-row>
-    <ion-row class="ion-align-items-center">
-      <ion-col class="ion-text-center">Arrival Time</ion-col>
-    </ion-row>
-    @for (inbound_trip of inbound_trips; track inbound_trip.trip_id) {
-    <ion-row class="ion-align-items-center">
-      <ion-col class="ion-text-center">
-        {{date_placeholder +' '+inbound_trip.arrival_time | date: 'shortTime'}}
-      </ion-col>
-    </ion-row>
-    }
-  </ion-grid>
-  <ion-grid class="schedules">
-    <ion-row class="ion-align-items-center">
-      <ion-col class="ion-text-center sub-header">
-        Going towards Tripunithura
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-align-items-center">
-      <ion-col class="ion-text-center">Arrival Time</ion-col>
-    </ion-row>
-    @for (outbound_trip of outbound_trips; track outbound_trip.trip_id) {
-    <ion-row class="ion-align-items-center">
-      <ion-col class="ion-text-center">
-        {{date_placeholder +' '+outbound_trip.arrival_time | date: 'shortTime'}}
-      </ion-col>
-    </ion-row>
-    }
   </ion-grid>
 </ion-content>
-
 <ion-footer>
   <ion-toolbar>
     <ion-button expand="full" (click)="logUserOut()">Log out</ion-button>

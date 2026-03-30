@@ -37,6 +37,6 @@ export class Auth {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer '+token
     });
-    return this.http.get(`${this.apiUrl}logout`, { headers });
+    return this.http.post(`${this.apiUrl}logout`, null, { headers: headers });
   }
 }
