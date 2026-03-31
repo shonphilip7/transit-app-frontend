@@ -18,4 +18,10 @@ export class Trainview {
   getRoutes(): Observable<any[]> {
     return this.http.get<any[]>(this.routeUrl);
   }
+  
+  getStops(route: string): Observable<any[]> {
+    //using backtick to append variable
+    const stopUrl = `http://localhost/api/${route}/stops`
+    return this.http.get<any[]>(stopUrl);
+  }
 }

@@ -29,6 +29,7 @@ export class Tab1Page {
   private AUTH_TOKEN_VALUE: boolean | null = null;
   private apiSubscription: Subscription | undefined;
   private routeSubscription: Subscription | undefined;
+  private stopsSubscription: Subscription | undefined;
   public today = Date.now();
   trips: any[] = [];
   inbound_trips: any[] = [];
@@ -36,6 +37,7 @@ export class Tab1Page {
   errorMessage: string = '';
   station_name: string = '';
   public route_items: any[] = [];
+  public stop_items: any[] = [];
   trainViewForm: FormGroup;
   // Initialize the boolean to true to show the form initially
   showForm: boolean = true;
@@ -48,7 +50,8 @@ export class Tab1Page {
     private fb: FormBuilder
   ) {
     this.trainViewForm = this.fb.group({
-      selectedRoute: ['', Validators.required]
+      selectedRoute: ['', Validators.required],
+      selectedStop: ['', Validators.required]
     });
   }
   
@@ -113,7 +116,6 @@ export class Tab1Page {
     this.routeSubscription = this.trainViewService.getRoutes().subscribe({
       next: (data) => {
         this.route_items = data;
-        console.log(this.route_items);
       },
       error: (error) => {
         this.errorMessage = 'Failed to fetch routes';
@@ -122,9 +124,33 @@ export class Tab1Page {
     });
   }
 
+  fetchStops(value: string) {
+    this.stopsSubscription = this.trainViewService.getStops(value).subscribe({
+      next: (data) => {
+        this.stop_items = data;
+        console.log(this.stop_items);
+      },
+      error: (error) => {
+        this.errorMessage = 'Failed to fetch routes';
+        console.error('Error:', error);
+      }
+    });
+  }
+
+  onSelectionRoute(event: any) {
+    const selectedValue = event.detail.value;
+    this.fetchStops(selectedValue);
+  }
+
   ngOnDestroy() {
     if (this.apiSubscription) {
       this.apiSubscription.unsubscribe();
+    }
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+    if (this.stopsSubscription) {
+      this.stopsSubscription.unsubscribe();
     }
   }
 }

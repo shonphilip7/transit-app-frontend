@@ -13,7 +13,7 @@
   <form *ngIf="showForm" [formGroup]="trainViewForm" (ngSubmit)="submitForm()">
     <ion-list>
       <ion-item>
-        <ion-select formControlName="selectedRoute" label="Select Route" placeholder="Select">
+        <ion-select formControlName="selectedRoute" label="Select Route" placeholder="Select" (ionChange)="onSelectionRoute($event)">
         <ion-select-option 
           *ngFor="let item of route_items" 
           [value]="item.route_id"> <!-- Bind the value to a unique ID -->
@@ -25,42 +25,58 @@
       <ion-item *ngIf="hasError('selectedRoute', 'required')">
         <ion-label color="danger">Please select an option.</ion-label>
       </ion-item>
+      <ion-item>
+        <ion-select formControlName="selectedStop" label="Select Stop" placeholder="Select">
+          <ion-select-option *ngFor="let stop_item of stop_items" [value]="stop_item.stop_id">
+            {{stop_item.stop_name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!-- Error message display -->
+      <ion-item *ngIf="hasError('selectedStop', 'required')">
+        <ion-label color="danger">Please select an option.</ion-label>
+      </ion-item>
     </ion-list>
     <ion-button expand="block" type="submit" class="ion-margin-top">
-      Submit Action
+      Get Schedules
     </ion-button>
   </form>
   @let date_placeholder = (today | date: 'fullDate');
   <ion-grid class="schedules" *ngIf="!showForm">
-    <ion-row>
-      <ion-col size-sm="12" size-md="6">
-        <div class="ion-text-center sub-header ion-padding">Going towards Aluva</div>
+  <ion-row>
+    <!--
+      On small screens and up (sm, md, lg, xl), this column takes up 6 of 12 columns (50%).
+      On extra small screens (default), it takes up all 12 columns (100%).
+    -->
+    <ion-col size="12" size-sm="6">
+      <div class="ion-text-center sub-header ion-padding">Inbound</div>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-text-center" style="font-weight: bold;">Arrival Time</ion-col>
+      </ion-row>
+      @for (inbound_trip of inbound_trips; track inbound_trip.trip_id) {
         <ion-row class="ion-align-items-center">
-          <ion-col class="ion-text-center" style="font-weight: bold;">Arrival Time</ion-col>
+          <ion-col class="ion-text-center">
+            {{date_placeholder +' '+inbound_trip.arrival_time | date: 'shortTime'}}
+          </ion-col>
         </ion-row>
-        @for (inbound_trip of inbound_trips; track inbound_trip.trip_id) {
-          <ion-row class="ion-align-items-center">
-            <ion-col class="ion-text-center">
-              {{date_placeholder +' '+inbound_trip.arrival_time | date: 'shortTime'}}
-            </ion-col>
-          </ion-row>
-        }
-      </ion-col>
-      <ion-col size-sm="12" size-md="6">
-        <div class="ion-text-center sub-header ion-padding">Going towards Tripunithura</div>
+      }
+    </ion-col>
+    <!-- This column behaves the same as the one above -->
+    <ion-col size="12" size-sm="6">
+      <div class="ion-text-center sub-header ion-padding">Outbound</div>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="ion-text-center" style="font-weight: bold;">Arrival Time</ion-col>
+      </ion-row>
+      @for (outbound_trip of outbound_trips; track outbound_trip.trip_id) {
         <ion-row class="ion-align-items-center">
-          <ion-col class="ion-text-center" style="font-weight: bold;">Arrival Time</ion-col>
+          <ion-col class="ion-text-center">
+            {{date_placeholder +' '+outbound_trip.arrival_time | date: 'shortTime'}}
+          </ion-col>
         </ion-row>
-        @for (outbound_trip of outbound_trips; track outbound_trip.trip_id) {
-          <ion-row class="ion-align-items-center">
-            <ion-col class="ion-text-center">
-              {{date_placeholder +' '+outbound_trip.arrival_time | date: 'shortTime'}}
-            </ion-col>
-          </ion-row>
-        }
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      }
+    </ion-col>
+  </ion-row>
+</ion-grid>
 </ion-content>
 <ion-footer>
   <ion-toolbar>
