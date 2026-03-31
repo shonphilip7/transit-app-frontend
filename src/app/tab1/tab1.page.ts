@@ -89,14 +89,14 @@ export class Tab1Page {
       console.log('Form Submitted Successfully!', this.trainViewForm.value);
       // Hide the form after successful submission
       this.showForm = false;
-      this.loadData();
+      this.loadData(this.trainViewForm.value.selectedRoute, this.trainViewForm.value.selectedStop);
     } else {
       console.log('Form is Invalid. Please select an option.');
     }
   }
 
-  loadData() {
-    this.apiSubscription = this.trainViewService.getTrainView().subscribe({
+  loadData(route: string, stop: string) {
+    this.apiSubscription = this.trainViewService.getTrainView(route, stop).subscribe({
       next: (data) => {
           this.trips = data;
           for (const trip of Object.values(this.trips)) {

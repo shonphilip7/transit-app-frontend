@@ -11,8 +11,9 @@ export class Trainview {
   
   constructor(private http: HttpClient) { }
 
-  getTrainView(): Observable<any[]>{
-    return this.http.get<any[]>(this.apiUrl);
+  getTrainView(route: string, stop: string): Observable<any[]> {
+    const trainViewUrl = `http://localhost/api/trainview/${route}/${stop}`;
+    return this.http.get<any[]>(trainViewUrl);
   };
 
   getRoutes(): Observable<any[]> {
