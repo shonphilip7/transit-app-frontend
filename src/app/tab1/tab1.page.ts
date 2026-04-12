@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, 
   IonButton, IonFooter, IonCol, IonGrid, IonRow,
@@ -9,7 +9,7 @@ import { StorageServices } from '../services/storage-services';
 import { Auth } from '../services/auth';
 import { Router } from '@angular/router';
 import { Trainview } from '../services/trainview';
-import { Subscription } from 'rxjs';
+import { timer, Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -24,12 +24,14 @@ import { CommonModule } from '@angular/common';
     IonSelect, IonSelectOption, CommonModule, IonLabel
   ],
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit, OnDestroy {
   private readonly AUTH_TOKEN_KEY = 'auth_token';
   private AUTH_TOKEN_VALUE: boolean | null = null;
   private apiSubscription: Subscription | undefined;
   private routeSubscription: Subscription | undefined;
   private stopsSubscription: Subscription | undefined;
+  private timeSubscription: Subscription | undefined;
+  private refreshSubscription: Subscription | undefined;
   public today = Date.now();
   trips: any[] = [];
   inbound_trips: any[] = [];
@@ -58,6 +60,9 @@ export class Tab1Page {
   ngOnInit() {
     //this.loadData();
     this.fetchRoutes();
+    this.timeSubscription = timer(0, 60000).subscribe(() => {
+      this.today = Date.now();
+    });
   }
   
   async logUserOut() {
@@ -90,6 +95,9 @@ export class Tab1Page {
       // Hide the form after successful submission
       this.showForm = false;
       this.loadData(this.trainViewForm.value.selectedRoute, this.trainViewForm.value.selectedStop);
+      this.refreshSubscription = timer(60000,60000).subscribe(
+        () => this.loadData(this.trainViewForm.value.selectedRoute, this.trainViewForm.value.selectedStop)
+      );
     } else {
       console.log('Form is Invalid. Please select an option.');
     }
@@ -99,6 +107,7 @@ export class Tab1Page {
     this.apiSubscription = this.trainViewService.getTrainView(route, stop).subscribe({
       next: (data) => {
           this.trips = data;
+          console.log(this.trips);
           for (const trip of Object.values(this.trips)) {
             this.inbound_trips = trip.Inbound;
             this.outbound_trips = trip.Outbound;
@@ -151,6 +160,12 @@ export class Tab1Page {
     }
     if (this.stopsSubscription) {
       this.stopsSubscription.unsubscribe();
+    }
+    if (this.timeSubscription) {
+      this.timeSubscription.unsubscribe();
+    }
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
     }
   }
 }
