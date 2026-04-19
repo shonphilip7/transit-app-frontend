@@ -6,11 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Map {
-  private apiUrl = 'http://localhost/api/kml/R1/1';
 
   constructor(private http: HttpClient) { }
 
-  getCoordinates(): Observable<any[]>{
-    return this.http.get<any[]>(this.apiUrl);
+  getCoordinates(route: string): Observable<any[]> {
+    /**
+     * Using const for API URLs in Ionic/Angular functions ensures the URL 
+     * remains immutable and local to that scope
+     */
+    const apiUrl = `http://localhost/api/kml/${route}/1`;
+    return this.http.get<any[]>(apiUrl);
   };
 }

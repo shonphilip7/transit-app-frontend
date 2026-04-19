@@ -12,5 +12,14 @@
       <ion-title size="large">Map</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-item>
+    <ion-select label="Select Route" placeholder="Select" (ionChange)="onSelectionRoute($event)">
+      <ion-select-option 
+      *ngFor="let item of route_items" 
+      [value]="item.route_id"> <!-- Bind the value to a unique ID -->
+      {{ item.route_long_name }} <!-- Display the name to the user -->
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
   <div id="map"></div>
 </ion-content>
