@@ -1,27 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, 
-  IonButton, IonFooter, IonCol, IonGrid, IonRow,
+  IonButton, IonCol, IonGrid, IonRow,
   IonList, IonItem, IonSelect, IonSelectOption,
-  IonLabel 
+  IonLabel, IonButtons, IonIcon 
 } from '@ionic/angular/standalone';
-import { StorageServices } from '../services/storage-services';
-import { Auth } from '../services/auth';
-import { Router } from '@angular/router';
 import { Trainview } from '../services/trainview';
 import { timer, Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
   imports: [
-    IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonFooter, 
+    IonHeader, IonToolbar, IonTitle, IonContent, IonButton, 
     IonCol, IonGrid, IonRow, DatePipe, ReactiveFormsModule, IonList, IonItem,
-    IonSelect, IonSelectOption, CommonModule, IonLabel
+    IonSelect, IonSelectOption, CommonModule, IonLabel, IonButtons, IonIcon,
+    RouterLink
   ],
 })
 export class Tab1Page implements OnInit, OnDestroy {
@@ -45,9 +44,6 @@ export class Tab1Page implements OnInit, OnDestroy {
   showForm: boolean = true;
 
   constructor(
-    private storageService: StorageServices, 
-    private authService: Auth, 
-    private router: Router, 
     private trainViewService: Trainview, 
     private fb: FormBuilder
   ) {
@@ -58,26 +54,9 @@ export class Tab1Page implements OnInit, OnDestroy {
   }
   
   ngOnInit() {
-    //this.loadData();
     this.fetchRoutes();
     this.timeSubscription = timer(0, 60000).subscribe(() => {
       this.today = Date.now();
-    });
-  }
-  
-  async logUserOut() {
-    this.AUTH_TOKEN_VALUE = await this.authService.isLoggedIn();
-    this.authService.logout(this.AUTH_TOKEN_VALUE).subscribe({
-      next: async (response) => {
-        console.log(response);
-        await this.storageService.remove(this.AUTH_TOKEN_KEY);
-        this.router.navigateByUrl('/login');
-      },
-      error: async (error) => {
-        console.error('Logout failed', error);
-        await this.storageService.remove(this.AUTH_TOKEN_KEY);
-        this.router.navigateByUrl('/login');
-      }
     });
   }
 
@@ -149,6 +128,11 @@ export class Tab1Page implements OnInit, OnDestroy {
   onSelectionRoute(event: any) {
     const selectedValue = event.detail.value;
     this.fetchStops(selectedValue);
+  }
+
+  newSearch(event: any) {
+    event.preventDefault();
+    this.showForm = true;
   }
 
   ngOnDestroy() {

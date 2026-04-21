@@ -2,8 +2,12 @@
   <ion-toolbar>
     <ion-grid>
       <ion-row>
-        <ion-col size="2"></ion-col>
-        <ion-col size="8" class="ion-text-center"><ion-title>{{station_name}} Station Departures</ion-title></ion-col>
+        <ion-col size="2" class="ion-text-center">
+          <a href="/tabs/tab1" (click)="newSearch($event)" *ngIf="!showForm">New Search</a>
+        </ion-col>
+        <ion-col size="8" class="ion-text-center">
+          <ion-title>@if (!showForm) {{{station_name}}} Station Departures</ion-title>
+        </ion-col>
         <ion-col size="2">{{ today | date: 'shortTime' }}</ion-col>
       </ion-row>
     </ion-grid>
@@ -78,8 +82,3 @@
   </ion-row>
 </ion-grid>
 </ion-content>
-<ion-footer>
-  <ion-toolbar>
-    <ion-button expand="full" (click)="logUserOut()">Log out</ion-button>
-  </ion-toolbar>
-</ion-footer>

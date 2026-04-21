@@ -2,6 +2,10 @@ ion-header ion-toolbar:first-of-type {
   --background: #0000CC;
   --color: var(--ion-color-primary-contrast);
 }
+ion-header a {
+  color: var(--ion-color-primary-contrast);
+  text-decoration: none;
+}
 .schedules ion-col {
   border: 1px solid #ccc;
 }
